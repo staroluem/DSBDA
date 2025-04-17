@@ -1,0 +1,65 @@
+import pandas as pd
+import numpy as np
+df = pd.read_csv("Academic_Performance.csv")
+
+missed = df.isnull().sum()
+print(missed)
+
+df.dtypes
+
+df["COURSE 1 MARKS"]=df["COURSE 1 MARKS"].replace(np.NaN,df["COURSE 1 MARKS"].median())
+df["COURSE 1 MARKS"].isnull().sum()
+df["COURSE 2 MARKS"]=df["COURSE 2 MARKS"].replace(np.NaN,df["COURSE 2 MARKS"].mean())
+df["COURSE 2 MARKS"].isnull().sum()
+
+import seaborn as sns
+sns.boxplot(x=df['COURSE 1 MARKS'])
+
+Q1 = df["COURSE 1 MARKS"].quantile(0.25)
+Q3 = df["COURSE 1 MARKS"].quantile(0.75)
+IQR = Q3 - Q1
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+# finding outliers--->
+outliers = df[(df["COURSE 1 MARKS"] < lower_bound) | (df["COURSE 1 MARKS"] > upper_bound)]
+print(f"Outliers detected: {outliers.shape[0]}")
+
+from sklearn.preprocessing import LabelEncoder
+label = LabelEncoder()
+pf['GENDER'] = label.fit_transform(pf['GENDER'])
+pf['GENDER'].isnull().sum()
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+
+np.random.seed(42)
+right_skewed_data = np.random.exponential(scale=2.0, size=1000)  
+
+# Apply transformations
+log_transformed = np.log1p(right_skewed_data)  
+sqrt_transformed = np.sqrt(right_skewed_data)
+scaler = MinMaxScaler()
+minmax_transformed = scaler.fit_transform(right_skewed_data.reshape(-1, 1)).flatten()
+fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+
+axes[0, 0].hist(right_skewed_data, bins=30, color='blue', alpha=0.7)
+axes[0, 0].set_title("Original Right-Skewed Data")
+
+axes[0, 1].hist(log_transformed, bins=30, color='coral', alpha=0.9)
+axes[0, 1].set_title("Log Transformation")
+
+axes[1, 0].hist(sqrt_transformed, bins=30, color='crimson', alpha=0.8)
+axes[1, 0].set_title("Square Root Transformation")
+
+axes[1, 1].hist(minmax_transformed, bins=30, color='red', alpha=0.7)
+axes[1, 1].set_title("Min-Max Scaling")
+plt.show()
+
+
+
+
+
+
+
+
