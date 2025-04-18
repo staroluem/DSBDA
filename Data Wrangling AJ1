@@ -1,0 +1,7 @@
+df = pd.read_csv('data.csv')
+df.fillna(130, inplace = True)
+data.replace(-999, np.nan)
+
+df = pd.read_csv('data.csv')
+x = df["Calories"].mean()
+df["Calories"].fillna(x, inplace = True)
