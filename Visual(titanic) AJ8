@@ -1,0 +1,39 @@
+import seaborn as sns
+df = sns.load_dataset('titanic')
+
+df.drop("deck",axis=1,inplace =True)
+df.dropna(inplace =True)
+
+sns.scatterplot(x='age',y='fare',hue = 'sex',data=df)
+sns.histplot(x='fare',data=df,hue='sex',binwidth=30)
+sns.displot(x='fare',data=df,hue='sex',binwidth=20,kde='True')
+sns.barplot(x='age',y='sex',hue='pclass',data=df)
+sns.countplot(x='pclass',hue='sex',data=df)
+sns.pairplot(data=df,hue='sex')
+sns.catplot(x='embarked',kind='count',col='pclass',data=df)
+sns.boxplot(x='sex',y='age',data=df)
+
+import numpy as np
+male_data = male_age['age']
+female_data=female_age['age']
+data=sorted(male_data)
+data2= sorted(female_data)
+
+#male data
+q1 = np.percentile(data,25)
+q3 = np.percentile(data,75)
+IQR=q3-q1
+lower = q1-(1.5*IQR)
+upper = q3+(1.5*IQR)
+
+outlier = []
+for i in data:
+    if(i<lower):
+        outlier.append(i)
+    if(i>upper):
+        outlier.append(i)
+print(outlier)
+
+sns.violinplot(data=d_age,hue='sex',x='age',y='sex')
+sns.stripplot('data')
+sns.swarmplot(x='pclass',y='age',data=df,hue='survived')
