@@ -1,0 +1,40 @@
+import pandas as pd
+import numpy as np
+df = pd.read_csv("Social_Network_Ads.csv")
+df.drop('User ID',axis =1 ,inplace =True)
+
+from sklearn.preprocessing import LabelEncoder
+label = LabelEncoder()
+df["Gender"] = label.fit_transform(df["Gender"])
+
+import seaborn as sns
+cor = df.corr()
+sns.heatmap(cor,cbar=True,fmt='0.1f',annot=True)
+
+X = df.drop('Purchased',axis =1)
+y = df['Purchased']
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2,random_state=34)
+
+from sklearn.preprocessing import StandardScaler
+std = StandardScaler()
+X_train = std.fit_transform(X_train)
+X_test = std.fit_transform(X_test)
+
+from sklearn.linear_model import LogisticRegression
+obj = LogisticRegression()
+obj.fit(X_train,y_train)
+y_pred=obj.predict(X_test)
+print(y_pred)
+
+from sklearn.metrics import accuracy_score,precision_score,recall_score,confusion_matrix
+a_score = accuracy_score(y_test,y_pred)
+a_score
+p_score = precision_score(y_test,y_pred)
+p_score
+r_score = recall_score(y_test,y_pred)
+r_score
+tn,fp,fn,tp = confusion_matrix(y_test,y_pred).ravel()
+print(tn,fp,fn,tp)
+print(classification_report(y_test,y_pred))
+
