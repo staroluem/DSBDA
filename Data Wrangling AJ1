@@ -5,3 +5,19 @@ data.replace(-999, np.nan)
 df = pd.read_csv('data.csv')
 x = df["Calories"].mean()
 df["Calories"].fillna(x, inplace = True)
+    or
+df["Calories"]=df["calories"].replace(np.Nan,df["calories"].mean())
+
+df= df.drop(['Country'], axis=1)
+
+# Importing one hot encoder
+from sklearn.preprocessing import OneHotEncoder
+# Creating one hot encoder object
+onehot = OneHotEncoder()
+#reshape the 1-D country array to 2-D as fit_transform expects 2-D and finally fit the object
+X = onehot.fit_transform(data. Country.values.reshape(-1,1)).toarray()
+#To add this back into the original dataframe
+dfOneHot = pd.DataFrame(X, columns = ["Country_"+str(int(i)) for i in range(data.shape[1])])
+df = pd.concat([data, dfOneHot], axis=1)
+
+
