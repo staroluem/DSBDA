@@ -1,0 +1,37 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+df = pd.read_csv("iris.csv")
+df.drop('Id',axis=1,inplace =True)
+df.isnull().sum()
+x = df.drop('Species',axis=1)
+y = df['Species']
+
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test = train_test_split(x,y,test_size=0.2,random_state=5)
+
+from sklearn.preprocessing import StandardScaler
+st = StandardScaler()
+X_train_scaled = st.fit_transform(X_train)
+X_test_scaled = st.fit_transform(X_test)
+
+from sklearn.naive_bayes import GaussianNB
+models = GaussianNB()
+models.fit(X_train_scaled,y_train)
+y_pred=models.predict(X_test)
+print(y_pred)
+
+from sklearn.metrics import accuracy_score,precision_score, recall_score, confusion_matrix
+a_score = accuracy_score(y_test,y_pred)
+a_score
+p_score = precision_score(y_test,y_pred,average='micro')
+p_score
+r_score = recall_score(y_test,y_pred,average ='micro')
+r_score
+cm=confusion_matrix(y_test,y_pred)
+cm
+
+x_new = [[5.5,3.5,1.3,0.2]]
+x_new = st.fit_transform(x_new)
+y_new=models.predict(x_new)
+print(y_new)
