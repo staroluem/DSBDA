@@ -1,0 +1,68 @@
+import pandas as pd
+df = pd.read_csv("Alexa-Dataset.csv")
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.countplot(x='feedback',data=df,palette='viridis')
+plt.title('Feedback Distribution (0 = Negative, 1 = Positive)')
+plt.show()
+
+sns.countplot(x='rating',data=df,palette='coolwarm')
+plt.title("Rating Distribution")
+plt.show()
+
+ax=df.apply(lambda x:x.astype(str).str.lower())
+ax.head()
+
+import string
+string.punctuation
+def remove_pun(text):
+    if isinstance(text,str):
+        return"".join([char for char in text if char not in string.punctuation])
+    return ""
+df["clean"] = df["verified_reviews"].apply(remove_pun)
+
+import re
+def emoji(text):
+    if isinstance(text,str):
+        return re.sub(r"[^\w\s]","",text)
+    return ""
+df["cleaned"] = df["verified_reviews"].apply(emoji)
+df["cleaned"].head()
+
+def token(text):
+    tokens = re.split('W+',text)
+    return tokens
+df["token_cleaned"] = df["cleaned"].apply(lambda x:token(x))
+df["token_cleaned"]
+
+import nltk
+from nltk.corpus import stopwords
+nltk.download('stopwords')
+
+st=set(stopwords.words('english'))
+def rem_st(text):
+    return"".join([word for word in str(text).split() if word not in st])
+df["rev_stop"]=df["token_cleaned"].apply(lambda text:rem_st(text))
+df["rev_stop"]
+
+from nltk.stem.porter import PorterStemmer
+
+stemmer = PorterStemmer()
+def stem_word(text):
+    return " ".join([stemmer.stem(word)for word in text.split()])
+df["rev_steem"]=df["rev_stop"].apply(lambda text : stem_word(text))
+df["rev_steem"]
+
+#Perform the word vectorization
+from sklearn.feature_extraction.text import CountVectorizer
+reviews = df["review_lemmatized"].astype(str)
+bow_vectorizer = CountVectorizer()
+bow_matrix = bow_vectorizer.fit_transform(reviews)
+bow_matrix.shape
+
+#Create representation of Review Text by calculating Term Frequency and Inverse Document Frequency (TF-IDF)
+from sklearn.feature_extraction.text import TfidfVectorizer
+tfidf_vectorizer = TfidfVectorizer()
+tfidf_matrix = tfidf_vectorizer.fit_transform(reviews)
+tfidf_matrix.shape
