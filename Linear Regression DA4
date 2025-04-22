@@ -2,6 +2,10 @@ df = pd.read_csv("Banglore Housing Prices.csv")
 
 df['bath']=df['bath'].replace(np.NaN,df['bath'].mean())
 df.isnull().sum()
+df['size']=df['size'].fillna('1 BHK')
+df.isnull().sum()
+df['location'].fillna('Not known')
+df.isnull().sum()
 
 df['size'] = df['size'].str.extract(r'(\d+)').astype(float)
 
@@ -32,3 +36,24 @@ upper_bound = Q3 + 1.5 * IQR
 # finding outliers--->
 outliers = df[(df["Price_per_square"] < lower_bound) | (df["Price_per_square"] > upper_bound)]
 print(f"Outliers detected: {outliers.shape[0]}")
+
+x=df.drop('price',axis=1)
+y=df['price']*10000
+
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.2,random_state=42)
+
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
+model.fit(x_train,y_train)
+y_pred = predict(x_test)
+
+from sklearn.metrics import mean_squared_error,r2_error
+mes=mean_squared_error(y_test,y_pred)
+r2 = r2_score(y_test, y_pred)
+
+mes
+
+
+
+
