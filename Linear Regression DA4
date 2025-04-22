@@ -1,0 +1,25 @@
+df = pd.read_csv("Banglore Housing Prices.csv")
+
+df['bath']=df['bath'].replace(np.NaN,df['bath'].mean())
+df.isnull().sum()
+
+df['size'] = df['size'].str.extract(r'(\d+)').astype(float)
+
+def convertsqft(sq):
+  try:
+    if '-' in sq:
+      total = list(map(float,sq.split('-')))
+        return (total[0] +total[1])/2
+    return float(sq)
+  except:
+    return None
+df['total_sqft'] = df['total_sqft'].apply(convertSqu)
+df.dropna(subset=['total_sqft'], inplace = True)
+
+def pricePerSqu():
+    df['Price_per_square'] = df['price']*100000 / df['total_sqft']
+    print(df['Price_per_square'])
+pricePerSqu()
+
+import seaborn as sn
+sn.boxplot( x=df['Price_per_square'])
