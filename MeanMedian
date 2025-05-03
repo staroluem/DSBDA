@@ -1,0 +1,52 @@
+def mean(arr):
+    n=len(arr)
+    m=0
+    for i in range(n):
+        m += i
+        sum1 = m//n
+    return sum1
+print(f"Mean of Income is {mean(df["Income"])}")
+
+def median(arr):
+    sort=sorted(arr)
+    n=len(sort)
+    if n%2 == 0:
+        e1=(n//2)-1
+        e2=(n+1)//2
+        return((sort[e1]+sort[e2])//2)
+    else:
+        return(sort//2)
+print(f"median of Income is {median(df["Income"])}")
+
+def mode(arr):
+    setofarr =set(arr)
+    maxcount=0
+    ans=0
+    for i in setofarr:
+        count=arr[arr==i].count()
+        if(count>maxcount):
+            maxcount=count
+            ans=i
+    return ans
+mode(df["Income"])
+
+def mini(arr):
+    sort=sorted(arr)
+    return(sort[0])
+print(mini(df["Income"]))
+
+
+Income_mean=df["Income"].mean()
+median=df["Income"].median()
+mode=df["Income"].mode()
+maxi=df["Income"].max()
+mini=df["Income"].min()
+std=df["Income"].std()
+print("\n",Income_mean,median,mode,maxi,mini,std)
+
+grouped_stats = df.groupby('Age')['Income'].agg(['mean', 'median', 'min', 'max', 'std'])
+# Map age categories to numeric codes
+age_mapping = {'Young': 0, 'Middle Age': 1, 'Old': 2}
+df['Age_Code'] = df['Age'].map(age_mapping)
+age_code_list = df['Age_Code'].tolist()
+grouped_stats, age_code_list
