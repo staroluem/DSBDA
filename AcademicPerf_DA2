@@ -8,21 +8,37 @@ print(missed)
 df.dtypes
 
 df["COURSE 1 MARKS"]=df["COURSE 1 MARKS"].replace(np.NaN,df["COURSE 1 MARKS"].median())
-df["COURSE 1 MARKS"].isnull().sum()
 df["COURSE 2 MARKS"]=df["COURSE 2 MARKS"].replace(np.NaN,df["COURSE 2 MARKS"].mean())
-df["COURSE 2 MARKS"].isnull().sum()
+
+df.drop("ACADEMIC_PROGRAM",axis=1,inplace=True)
+df["PLACEMENT"]=df["PLACEMENT"].fillna(df["PLACEMENT"].mode()[0])
+df["HONOR_OPTED_OR_NOT"]=df["HONOR_OPTED_OR_NOT"].fillna(df["HONOR_OPTED_OR_NOT"].mode()[0])
+df["EDUCATION_TYPE"]=df["EDUCATION_TYPE"].fillna(df["EDUCATION_TYPE"].mode()[0])
 
 import seaborn as sns
 sns.boxplot(x=df['COURSE 1 MARKS'])
 
-Q1 = df["COURSE 1 MARKS"].quantile(0.25)
-Q3 = df["COURSE 1 MARKS"].quantile(0.75)
-IQR = Q3 - Q1
-lower_bound = Q1 - 1.5 * IQR
-upper_bound = Q3 + 1.5 * IQR
-# finding outliers--->
-outliers = df[(df["COURSE 1 MARKS"] < lower_bound) | (df["COURSE 1 MARKS"] > upper_bound)]
-print(f"Outliers detected: {outliers.shape[0]}")
+numeric_cols = ['COURSE 1 MARKS', 'COURSE 2 MARKS', 'COURSE 3 MARKS', 'COURSE 4 MARKS', 'COURSE 5 MARKS', 'PERCENTILE']
+
+# Identify outliers in each column
+outlier_indices = set()
+for col in numeric_cols:
+    Q1 = df[col].quantile(0.25)
+    Q3 = df[col].quantile(0.75)
+    IQR = Q3 - Q1
+    lower = Q1 - 1.5 * IQR
+    upper = Q3 + 1.5 * IQR
+    outliers = df[(df[col] < lower) | (df[col] > upper)].index
+    outlier_indices.update(outliers)
+# Remove all rows with any outlier
+df_cleaned = df.drop(index=outlier_indices)
+
+print("Original rows:", df.shape[0])
+print("Rows after removing outliers:", df_cleaned.shape[0])
+print("Rows removed as outliers:", len(outlier_indices))
+
+import seaborn as sns
+sns.boxplot(x=df_cleaned["COURSE 1 MARKS"])
 
 from sklearn.preprocessing import LabelEncoder
 label = LabelEncoder()
