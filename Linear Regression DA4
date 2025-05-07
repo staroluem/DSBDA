@@ -28,14 +28,17 @@ pricePerSqu()
 import seaborn as sn
 sn.boxplot( x=df['Price_per_square'])
 
-Q1 = df["Price_per_square"].quantile(0.25)
-Q3 = df["Price_per_square"].quantile(0.75)
-IQR = Q3 - Q1
-lower_bound = Q1 - 1.5 * IQR
-upper_bound = Q3 + 1.5 * IQR
-# finding outliers--->
-outliers = df[(df["Price_per_square"] < lower_bound) | (df["Price_per_square"] > upper_bound)]
-print(f"Outliers detected: {outliers.shape[0]}")
+numeric = ['Price_per_square','size']
+outlier_in=set()
+for col in numeric:
+    q1 = df[col].quantile(0.25)
+    q3 = df[col].quantile(0.75)
+    IQR = q3-q1
+    lower = q1-1.5*IQR
+    high  = q3+1.5*IQR
+    outlier= df[(df[col]<lower) | (df[col]>high)].index
+    outlier_in.update(outlier)
+df_cleaned = df.drop(index=outlier_in)
 
 x=df.drop('price',axis=1)
 y=df['price']*10000
