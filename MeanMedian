@@ -35,6 +35,11 @@ def mini(arr):
     return(sort[0])
 print(mini(df["Income"]))
 
+def vari(arr):
+    n=len(arr)
+    mean=(sum(arr)//n)
+    var = sum((x - mean)**2 for x in arr )/(n-1)
+    return var
 
 Income_mean=df["Income"].mean()
 median=df["Income"].median()
