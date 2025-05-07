@@ -31,7 +31,7 @@ df["cleaned"] = df["verified_reviews"].apply(emoji)
 df["cleaned"].head()
 
 def token(text):
-    tokens = re.split('W+',text)
+    tokens = re.split('\W+',text)
     return tokens
 df["token_cleaned"] = df["cleaned"].apply(lambda x:token(x))
 df["token_cleaned"]
